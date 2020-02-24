@@ -24,6 +24,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Keymaps from './keys.js';
+import Image from './asset/apple-watch.png';
 
 /**
  * KeyboardNormal class extending React Component
@@ -58,12 +59,13 @@ class KeyboardNormal extends React.Component {
 				left:0, top:0,
 				width: this.props.width,
 				height: this.props.height
-			},
+			},		
 			overlayStyle : {
 				opacity: 0,
-				color: "white"
+				color: "black"
 			},
-			keyboardImg : "/images/ZoomBoard3b.png",
+			keyboardImg : "/images/ZoomBoard3.png",
+			backgroundImg: Image, 
 			overlayText : "",
 			originalDimensions : {width:0, height:0}
 		};
@@ -73,7 +75,7 @@ class KeyboardNormal extends React.Component {
 		//	React State affects UI rendering directly, which means , everytime your react state has changed
 		// 	by caling setState({}), render() function will be called.
 		this.inStartingPosition = true;
-		this.imgs = ["/images/ZoomBoard3b.png","/images/symbols3b.png"];
+		this.imgs = ["/images/ZoomBoard3.png","/images/symbols3b.png"];
         this.originalPosition =  {x:0,y:0};
 		this.originalDimensions = {width:0, height:0};
 		this.displaySize = this.props.displaySize;
@@ -382,7 +384,8 @@ class KeyboardNormal extends React.Component {
 						style={overlayStyle}
 						dangerouslySetInnerHTML={{
 							__html: this.state.overlayText
-						}}></div>
+						}}>
+						</div>
 				</div>
 			)
 		}else{ //else
@@ -396,7 +399,7 @@ class KeyboardNormal extends React.Component {
 						src={this.state.keyboardImg} onLoad={this.onLoad}
 						style={imgStyle}/>
 					<div className="overlay"
-						style={overlayStyle}
+						src={this.state.backgroundImg} style={overlayStyle}
 						dangerouslySetInnerHTML={{
 							__html: this.state.overlayText
 						}}></div>

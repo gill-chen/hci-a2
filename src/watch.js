@@ -17,6 +17,9 @@ import './index.css';
 import TextArea from './textarea'
 import KeyboardNormal from './keyboard.normal'
 import KeyboardZoom from './keyboard.wip'
+import WatchImage from './asset/apple-watch.png'
+import { text } from './phrases3.txt'; // Relative path to your File
+
 
 /**
  * Functions
@@ -71,6 +74,10 @@ function download(text, name, type) {
 	a.click();
 }	
 
+
+
+
+
 /**
  * Watch Class
  * This class extends React.Component
@@ -94,13 +101,13 @@ class Watch extends React.Component {
 		console.log(this.props.type===undefined);
 		this.type = (this.props.type === undefined) ? this.props.match.params.type : this.props.type;
 		this.originalScale = (this.props.originalScale === undefined)?this.props.match.params.scaleVal : this.props.originalScale;
-
+		this.trial = []; 
 		//this.type = this.props.match.params.type;
 		//this.originalScale = this.props.match.params.scaleVal;
 		console.log("[Watch] type: "+this.type);
 		console.log("[Watch] originalScale: "+this.originalScale);
 		console.time('timer'); 
-		this.start = window.performance.now();
+		// this.start = window.performance.now();
 		// React Component States.
 		// inputPhrase: a variable containing all characters typed by users.
 		// inputChar: a variable containing your current input character from the Keyboard.
@@ -111,7 +118,8 @@ class Watch extends React.Component {
 			inputPhrase: "",
 			inputChar: "",
 			keyPressedTimes: 0,
-			time: 0
+			time: 0,
+			charTime: [], 
 		};
 
 		//add the target phrases here or load them from external files
@@ -127,7 +135,7 @@ class Watch extends React.Component {
 		console.log("AppleWatch 38mm => "+size38.width +"/"+size38.height);
 		*/
 	}
-
+ 
 	/**
 	 * Callback for input character changes.
 	 * @param {} c: changed character
@@ -136,10 +144,26 @@ class Watch extends React.Component {
 	 * when the input character received, it changes inputPhrase state.
 	 */
 	onKeyCharReceived = (c) => {
-		this.setState({inputChar : c});
-		this.state.inputPhrase += c;	
-		this.state.keyPressedTimes += 1; 
-		console.log(this.state.keyPressedTimes);
+		if (this.state.keyPressedTimes == 0) {
+			this.overall_start = Date.now();
+			this.char_start = window.performance.now(); 
+
+			this.setState({inputChar : c});
+			this.state.inputPhrase += c;	
+			this.state.keyPressedTimes += 1; 
+			console.log(this.state.keyPressedTimes);
+			}
+		else {
+			this.char_end = window.performance.now(); 
+			this.state.charTime += (this.char_end - this.char_start)
+			this.state.charTime += ","
+			this.char_start = window.performance.now(); 
+
+			this.setState({inputChar : c});
+			this.state.inputPhrase += c;	
+			this.state.keyPressedTimes += 1; 
+			console.log(this.state.keyPressedTimes);
+		}
 	};
 
 
@@ -147,15 +171,23 @@ class Watch extends React.Component {
 	//this sample code only logs the target phrase and the user's input phrases
 	//TODO: you need to log other measurements, such as the time when a user inputs each char, user id, etc.
 	saveData = () => {
-		this.end = window.performance.now();
-		this.timing = this.end - this.start;
+		this.overall_end = Date.now();
+		this.char_end = window.performance.now(); 
+		this.timing = this.overall_end - this.overall_start - (this.char_end - this.char_start);
 		let log_file = JSON.stringify({
 			targetPhrase: this.targetPhrase,
 			inputPhrase: this.state.inputPhrase,
 			keyPressedTimes: this.state.keyPressedTimes,
-			time: this.timing
+			time: this.timing, 
+			charTime: this.state.charTime
 		})
-		download(log_file, "results.txt", "text/plain");
+		this.trial += (log_file+"\r\n"); 
+		console.log(this.trial);
+		this.state.inputPhrase = "";
+
+		this.setState({inputChar : "clear"}); 
+
+		download(this.trial, "results.txt", "text/plain");
 	}
 
 
@@ -170,10 +202,14 @@ class Watch extends React.Component {
 		if(this.type === 'normal'){
 			return(
 				<div className="watch">
-					 <label>{this.targetPhrase}</label>
+					<label>{this.targetPhrase}</label>
 					<TextArea inputChar={this.state.inputChar}/>
-					<KeyboardNormal originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
-					<button onClick={this.saveData}>SAVE AGAIN</button>
+					<img src={WatchImage} style={{height: 180}}/>
+					<div style={{position: 'absolute', top: '45%' , left: '2.5%'}}>
+						<KeyboardNormal originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
+					</div>
+					<button onClick={this.saveData} style={{position: 'absolute', top: '65%', left: '2.5%'}}>SAVE AGAIN</button>
+					<button style={{position: 'absolute', top: '65%', left: '20%'}}>NEXT</button>
 				</div>
 			);
 		}else if(this.type === 'zoom'){

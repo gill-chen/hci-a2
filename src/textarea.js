@@ -35,6 +35,8 @@ class TextArea extends React.Component{
         }
     }
 
+
+
     /**
      * Function in React Component lifecycle.
      * When the parent component pass different properties, 
@@ -49,11 +51,16 @@ class TextArea extends React.Component{
         if(nextProps.inputChar === "delete") {
             displayText = displayText.substring(0,displayText.length-1);
             this.setState({text: displayText})
-        } else {
+        } 
+        else if (c === "clear"){
+            this.setState({text: ""})
+        }
+        else {
             displayText = displayText.concat(c);
             this.setState({text: displayText})
         }
     }
+
 
     /**
      * Render function.
@@ -65,7 +72,7 @@ class TextArea extends React.Component{
      */
     render(){
         return(
-            <div className="typed" style = {this.props.style}>
+            <div className="typed" style = {this.props.style} >
                 {this.state.text}
             </div>
         )
