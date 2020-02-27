@@ -102,6 +102,8 @@ class Watch extends React.Component {
 		this.type = (this.props.type === undefined) ? this.props.match.params.type : this.props.type;
 		this.originalScale = (this.props.originalScale === undefined)?this.props.match.params.scaleVal : this.props.originalScale;
 		this.trial = []; 
+
+		this.phrases = ["2sd", "gdfg", "sdasd"]; 
 		//this.type = this.props.match.params.type;
 		//this.originalScale = this.props.match.params.scaleVal;
 		console.log("[Watch] type: "+this.type);
@@ -115,6 +117,7 @@ class Watch extends React.Component {
 		// Watch Component will re-render the interface if the state has changed by calling
 		// 	setState({});
 		this.state = {
+			targetPhrase: this.phrases[0],
 			inputPhrase: "",
 			inputChar: "",
 			keyPressedTimes: 0,
@@ -123,7 +126,6 @@ class Watch extends React.Component {
 		};
 
 		//add the target phrases here or load them from external files
-		this.targetPhrase =  "Hello how are your";
 
 
 		// For Debug, uncomment only if you want to measure exact width and height in pixels.
@@ -185,6 +187,8 @@ class Watch extends React.Component {
 		console.log(this.trial);
 		this.state.inputPhrase = "";
 
+		this.setState({targetPhrase: this.phrases[2]})
+
 		this.setState({inputChar : "clear"}); 
 
 		download(this.trial, "results.txt", "text/plain");
@@ -202,10 +206,10 @@ class Watch extends React.Component {
 		if(this.type === 'normal'){
 			return(
 				<div className="watch">
-					<label>{this.targetPhrase}</label>
+					<label>{this.state.targetPhrase}</label>
 					<TextArea inputChar={this.state.inputChar}/>
 					<img src={WatchImage} style={{height: 180}}/>
-					<div style={{position: 'absolute', top: '45%' , left: '2.5%'}}>
+					<div style={{position: 'absolute', top: '33%' , left: '1.5%'}}>
 						<KeyboardNormal originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
 					</div>
 					<button onClick={this.saveData} style={{position: 'absolute', top: '65%', left: '2.5%'}}>SAVE AGAIN</button>
