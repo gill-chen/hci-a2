@@ -41,8 +41,9 @@ class App extends React.Component{
                 <MetaTags>
                     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"></meta>
                 </MetaTags>
-                <Route exact path="/" render = {(props) => <Watch {...props} originalScale={0.15} type={'normal'}/>} />
+                <Route exact path="/" render = {(props) => <Watch {...props} originalScale={0.15} type={'normal'} participant={1} index={0}/>} />
                 <Route exact path="/:type/:scaleVal" component={Watch}/> 
+                <Route exact path="/:type/:scaleVal/:participant/:index" component={Watch}/> 
             </div>
         )
     }
