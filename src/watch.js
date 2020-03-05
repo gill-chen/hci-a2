@@ -152,7 +152,7 @@ class Watch extends React.Component {
 		this.type = (this.props.type === undefined) ? this.props.match.params.type : this.props.type;
 		this.originalScale = (this.props.originalScale === undefined)?this.props.match.params.scaleVal : this.props.originalScale;
 		this.participant = (this.props.participant === undefined) ? this.props.match.params.participant : this.props.participant;
-		this.index = (this.props.index === undefined) ? this.props.match.params.index : this.props.index;
+		// this.index = (this.props.index === undefined) ? this.props.match.params.index : this.props.index;
 
 
 		this.phrases2 = ["a feeling of complete exasperation", "an excellent way to communicate", "can we play cards tonight", "four times is a charm", "it is difficult to concentrate"]; 
@@ -205,12 +205,13 @@ class Watch extends React.Component {
 			keyPressedTimes: 0,
 			time: 0,
 			charTime: [], 
-			phraseNo: 0,
+			phraseNo: 0
 		};
 
 		this.trial = []; 
 
 		console.log(this.trial);
+
 
 		// For Debug, uncomment only if you want to measure exact width and height in pixels.
 		// Following codes won't be affected on any of your code. 
@@ -220,6 +221,18 @@ class Watch extends React.Component {
 		var size38 = deviceIndependenceSize(112,38);
 		console.log("AppleWatch 38mm => "+size38.width +"/"+size38.height);
 		*/
+	}
+
+	checkPhraseNo = () => {
+		if (localStorage.getItem("phraseNo") === null){
+			localStorage.setItem("phraseNo", JSON.stringify(this.state.phraseNo)); 
+			console.log("no phraseNo recorded");
+		}
+		else {
+			this.setState({phraseNo: (parseInt(localStorage.getItem("phraseNo")))});
+			this.setState({targetPhrase: this.phrases[this.state.phraseNo]})
+			console.log("THIS PHRASE NUMBER "+this.state.phraseNo); 
+		}
 	}
  
 	/**
@@ -252,7 +265,7 @@ class Watch extends React.Component {
 			console.log(this.state.keyPressedTimes);
 		}
 	};
-
+ 
 
 	//log data to files
 	//this sample code only logs the target phrase and the user's input phrases
@@ -260,16 +273,24 @@ class Watch extends React.Component {
 	saveData = () => {
 
 		//retrieving previous data first from local storage 
-		this.setState.phraseNo = JSON.parse(localStorage.getItem("index")); 
-		console.log(this.state.phraseNo);
+		
+		// if (localStorage.getItem("phraseNo") === null){
+		// 	localStorage.setItem("phraseNo", JSON.stringify(this.state.phraseNo)); 
+		// }
+		// else {
+		// 	this.setState({phraseNo: (parseInt(localStorage.getItem("phraseNo")))});
+		// }
 
-		if (this.state.phraseNo = 0){
+		console.log("phraseNo before logging "+this.state.phraseNo);
+
+		if (this.state.phraseNo == 0){
 			this.trial = [];
 		}
 		else {
 			this.trial = JSON.parse(localStorage.getItem("prevData")); 
 		}
 		console.log(this.trial);
+
 
 
 		this.overall_end = Date.now();
@@ -281,25 +302,27 @@ class Watch extends React.Component {
 			inputPhrase: this.state.inputPhrase,
 			keyPressedTimes: this.state.keyPressedTimes,
 			time: this.timing, 
-			charTime: this.state.charTime
+			charTime: this.state.charTime,
+			phraseNo: this.state.phraseNo
 		})
 
 		this.trial += (log_file+"\r\n"); 
-
-		console.log(this.state.phraseNo); 
-		//set index in local storage 
-		localStorage.setItem("index", JSON.stringify(this.state.phraseNo)); 
-
-		console.log(this.trial);
+		
+		console.log("This trial:" + this.trial);
 
 		//set current data in local storage 
 		localStorage.setItem("prevData", JSON.stringify(this.trial));
 
 		this.state.inputPhrase = "";
-		this.state.phraseNo += 1; 
+		this.state.phraseNo += 1;
+
+		//set index in local storage 
+		localStorage.setItem("phraseNo", JSON.stringify(this.state.phraseNo)); 
+
+
+		console.log("setting phrase number to "+this.state.phraseNo); 
 		this.state.charTime = [];
-
-
+		this.state.keyPressedTimes = 0; 
 
 		this.setState({targetPhrase: this.phrases[this.state.phraseNo]})
 
@@ -321,8 +344,9 @@ class Watch extends React.Component {
 	 *	type property you did pass from index.js
 	 */
 	render(){
+		// 
 		// style={{}} is an inline styling with calculated screen size // <img src={WatchImage} style={{height: 180}}/> 
-		if(this.type === 'normal' && this.originalScale === '0.112'){
+		if(this.type === 'normal' && this.originalScale === '0.18'){
 			return(
 				<div className="watch">
 					<div>Participant {this.participant}</div>
@@ -330,34 +354,32 @@ class Watch extends React.Component {
 					<TextArea className="text" inputChar={this.state.inputChar}/>
 
 					<div className="image" style ={styles.container}>
-						<div style={{margin: "auto", display: "inline-block", position: "relative", top: "70px", right: "3px"}}>
 							<KeyboardNormal originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
-						</div>
 					</div> 	
-
 					<button onClick={this.saveData} style={{position: 'absolute', top: '75%', left: '2.5%'}}>NEXT</button>
-					<button onClick={this.endSession} style={{position: 'absolute', top: '100%', left: '2.5%'}}>END SESSION</button>
+					<button onClick={this.checkPhraseNo} style={{position: 'absolute', top: '100%', left: '2.5%'}}>SET PHRASE</button>
+					<button onClick={this.endSession} style={{position: 'absolute', top: '100%', left: '40%'}}>END SESSION</button>
 				</div>
 			);
 		}
-		else if(this.type === 'normal' && this.originalScale === '0.15'){
+		else if(this.type === 'normal' && this.originalScale === '0.21'){
 			return(
 				<div className="watch">
-					<label>{this.state.targetPhrase}</label>
-					<TextArea inputChar={this.state.inputChar}/>
-					
+					<div>Participant {this.participant}</div>
+					<label className="label">{this.state.targetPhrase}</label>
+					<TextArea className="text" inputChar={this.state.inputChar}/>
+
 					<div className="large-image" style ={styles.container}>
-						<div style={{margin: "auto", display: "inline-block", position: "relative", top: "90px", right: "3px"}}>
 							<KeyboardNormal originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
-						</div>
 					</div> 	
-					<button onClick={this.saveData} style={{position: 'absolute', top: '65%', left: '2.5%'}}>SAVE AGAIN</button>
-					<button style={{position: 'absolute', top: '65%', left: '25%'}}>NEXT</button>
+					<button onClick={this.saveData} style={{position: 'absolute', top: '75%', left: '2.5%'}}>NEXT</button>
+					<button onClick={this.checkPhraseNo} style={{position: 'absolute', top: '100%', left: '2.5%'}}>SET PHRASE</button>
+					<button onClick={this.endSession} style={{position: 'absolute', top: '100%', left: '40%'}}>END SESSION</button>
 				</div>
 			);
 		}
 
-		else if(this.type === 'zoom'){
+		else if(this.type === 'zoom' && this.originalScale === '0.18'){
 			//the save button below is only to demonstrate to you how to save data
 			// to files.
 			//TODO: You need to remove it in your experiment and figure out another way

@@ -349,8 +349,34 @@ class KeyboardNormal extends React.Component {
 		const size = this.getWindowDimension();
 		const style = {
 			width: size.width,
-			height: size.height
+			height: size.height,
+			margin: "auto", 
+    		display: "inline-block", 
+    		position: "relative", 
+   			top: "70px",
+    		right: "3px",
 		};
+
+		const styleSmall = {
+			width: size.width,
+			height: size.height,
+			margin: "auto", 
+    		display: "inline-block", 
+    		position: "relative", 
+   			top: "100px",
+    		right: "3px",
+		};
+
+		const styleLarge = {
+			width: size.width,
+			height: size.height,
+			margin: "auto", 
+    		display: "inline-block", 
+    		position: "relative", 
+   			top: "125px",
+    		right: "2px",
+		};
+
 		const overlayStyle = {
 			width: size.width,
 			height: size.height,
@@ -369,9 +395,9 @@ class KeyboardNormal extends React.Component {
 		}
 		console.log("[Rendering...] " + size.width +"/"+size.height);
 		// if your browser supports PointerEvent...
-		if(window.PointerEvent){
+		if(window.PointerEvent && this.state.originalScale === '0.18'){
 			return(
-				<div className="container" style = {style} tabIndex="-1"
+				<div className="container" style = {styleSmall} tabIndex="-1"
 						onKeyDown={this.onKeyDown}
 						onTouchStart={this.onTouchStart}
 						onTouchMove={this._onTouchMove}
@@ -388,9 +414,68 @@ class KeyboardNormal extends React.Component {
 						</div>
 				</div>
 			)
-		}else{ //else
+		}
+		else if (window.PointerEvent && this.state.originalScale === '0.21'){
 			return(
-				<div className="container" style = {style} tabIndex="-1"
+				<div className="container" style = {styleLarge} tabIndex="-1"
+						onKeyDown={this.onKeyDown}
+						onTouchStart={this.onTouchStart}
+						onTouchMove={this._onTouchMove}
+						onTouchEnd={this._onTouchEnd}
+						onPointerUp = {this.onPointerUp}>
+					<img id="keyboardtype" className="KB" alt="kb"
+						src={this.state.keyboardImg} onLoad={this.onLoad}
+						style={imgStyle}/>
+					<div className="overlay"
+						style={overlayStyle}
+						dangerouslySetInnerHTML={{
+							__html: this.state.overlayText
+						}}>
+						</div>
+				</div>
+			)
+		}
+		else if (this.state.originalScale === '0.18'){
+			return(
+				<div className="container" style = {styleSmall} tabIndex="-1"
+						onKeyDown={this.onKeyDown}
+						onTouchStart={this.onTouchStart}
+						onTouchMove={this._onTouchMove}
+						onTouchEnd={this._onTouchEnd}>
+					<img id="keyboardtype" className="KB" alt="kb"
+						src={this.state.keyboardImg} onLoad={this.onLoad}
+						style={imgStyle}/>
+					<div className="overlay"
+						src={this.state.backgroundImg} style={overlayStyle}
+						dangerouslySetInnerHTML={{
+							__html: this.state.overlayText
+						}}></div>
+				</div>
+			)
+		}
+
+		else if (this.state.originalScale === '0.21'){
+			return(
+				<div className="container" style = {styleLarge} tabIndex="-1"
+						onKeyDown={this.onKeyDown}
+						onTouchStart={this.onTouchStart}
+						onTouchMove={this._onTouchMove}
+						onTouchEnd={this._onTouchEnd}>
+					<img id="keyboardtype" className="KB" alt="kb"
+						src={this.state.keyboardImg} onLoad={this.onLoad}
+						style={imgStyle}/>
+					<div className="overlay"
+						src={this.state.backgroundImg} style={overlayStyle}
+						dangerouslySetInnerHTML={{
+							__html: this.state.overlayText
+						}}></div>
+				</div>
+			)
+		}
+
+		else{ //else
+			return(
+				<div className="container" style = {styleSmall} tabIndex="-1"
 						onKeyDown={this.onKeyDown}
 						onTouchStart={this.onTouchStart}
 						onTouchMove={this._onTouchMove}
