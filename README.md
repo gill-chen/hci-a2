@@ -4,6 +4,19 @@ We have provided comments in the code for you to better understand it. Here we p
 
 Read the first two sections in the table of contents to understand how to run the code on laptops/desktops/mobiles. The rest sections provide general guidelines about the react app.
 
+
+## Notes for TAs 
+To format the watch size correctly on my smartphone (Samsung A70), I changed the watch size (path). 
+
+Small = 0.18
+Large = 0.21 
+
+I also added two extra path queries, participant number and phrase number to help facilitate the experiment session. 
+Example: 
+http://localhost:3000/normal/0.18/[participantno]/[phraseno] 
+http://localhost:3000/normal/0.18/3/0
+
+
 ## Table of Contents
 - [Folder Structure](#folder-structure)
 - [How to run the project](#run-project)

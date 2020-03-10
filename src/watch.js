@@ -380,19 +380,56 @@ class Watch extends React.Component {
 		}
 
 		else if(this.type === 'zoom' && this.originalScale === '0.18'){
-			//the save button below is only to demonstrate to you how to save data
-			// to files.
-			//TODO: You need to remove it in your experiment and figure out another way
-			// call this.saveData function to save user's data
 			return(
 				<div className="watch">
-				  <label>{this.targetPhrase}</label>
-					<TextArea inputChar={this.state.inputChar}/>
-					<KeyboardZoom originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
-					<button onClick={this.saveData}>SAVE</button>
+					<div>Participant {this.participant}</div>
+					<label className="label">{this.state.targetPhrase}</label>
+					<TextArea className="text" inputChar={this.state.inputChar}/>
+
+					<div className="image" style ={styles.container}>
+							<KeyboardZoom originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
+					</div> 	
+					<button onClick={this.saveData} style={{position: 'absolute', top: '75%', left: '2.5%'}}>NEXT</button>
+					<button onClick={this.checkPhraseNo} style={{position: 'absolute', top: '100%', left: '2.5%'}}>SET PHRASE</button>
+					<button onClick={this.endSession} style={{position: 'absolute', top: '100%', left: '40%'}}>END SESSION</button>
 				</div>
 			);
-		}else{
+			// return(
+			// 	<div className="watch">
+			// 	  <label>{this.targetPhrase}</label>
+			// 		<TextArea inputChar={this.state.inputChar}/>
+			// 		<KeyboardZoom originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
+			// 		<button onClick={this.saveData}>SAVE</button>
+			// 	</div>
+			// );
+		}
+
+		else if(this.type === 'zoom' && this.originalScale === '0.21'){
+			return(
+				<div className="watch">
+					<div>Participant {this.participant}</div>
+					<label className="label">{this.state.targetPhrase}</label>
+					<TextArea className="text" inputChar={this.state.inputChar}/>
+
+					<div className="large-image" style ={styles.container}>
+							<KeyboardZoom originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
+					</div> 	
+					<button onClick={this.saveData} style={{position: 'absolute', top: '75%', left: '2.5%'}}>NEXT</button>
+					<button onClick={this.checkPhraseNo} style={{position: 'absolute', top: '100%', left: '2.5%'}}>SET PHRASE</button>
+					<button onClick={this.endSession} style={{position: 'absolute', top: '100%', left: '40%'}}>END SESSION</button>
+				</div>
+			);
+			// return(
+			// 	<div className="watch">
+			// 	  <label>{this.targetPhrase}</label>
+			// 		<TextArea inputChar={this.state.inputChar}/>
+			// 		<KeyboardZoom originalScale={this.originalScale} onKeyCharReceived ={this.onKeyCharReceived}/>
+			// 		<button onClick={this.saveData}>SAVE</button>
+			// 	</div>
+			// );
+		}
+
+		else{
 			// exception
 			return(
 				<div>
